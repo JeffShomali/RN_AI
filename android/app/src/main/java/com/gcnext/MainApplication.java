@@ -1,4 +1,4 @@
-package com.reactnativeble;
+package com.gcnext;
 
 import android.app.Application;
 import android.util.Log;

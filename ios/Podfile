@@ -1,8 +1,8 @@
 platform :ios, '9.0'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
-target 'reactnativeBLE' do
-  # Pods for reactnativeBLE
+target 'gcnext' do
+  # Pods for gcnext
   pod 'React', :path => '../node_modules/react-native/'
   pod 'React-Core', :path => '../node_modules/react-native/React'
   pod 'React-DevSupport', :path => '../node_modules/react-native/React'
@@ -28,7 +28,7 @@ target 'reactnativeBLE' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'reactnativeBLETests' do
+  target 'gcnextTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -36,10 +36,10 @@ target 'reactnativeBLE' do
   use_native_modules!
 end
 
-target 'reactnativeBLE-tvOS' do
-  # Pods for reactnativeBLE-tvOS
+target 'gcnext-tvOS' do
+  # Pods for gcnext-tvOS
 
-  target 'reactnativeBLE-tvOSTests' do
+  target 'gcnext-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
