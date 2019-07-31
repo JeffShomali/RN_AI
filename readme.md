@@ -5,6 +5,7 @@
     - [Setup network](#setup-network)
     - [Setup SSH](#setup-ssh)
     - [Setup Node and NPM](#setup-node-and-npm)
+- [Server Setup](#server-setup)
 
 ## Environment Setup
 
@@ -29,7 +30,7 @@ $ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 
 $ sudo reboot # reboot the system
 
-$ ifconfig wlan0 # check to see if wifi is working # inet addr:192.168.1.21
+$ ifconfig wlan0 | grep inet # check to see if wifi is working # inet addr:192.168.1.21
 ```
 
 ### Setup SSH
@@ -47,6 +48,7 @@ $ ifconfig wlan0 # check to see if wifi is working # inet addr:192.168.1.21
 ```
 
 ### Setup Node and NPM
+
 ```Bash
 $ sudo apt-get update         # Update system package list
 $ sudo apt-get dist-upgrade   # Upgrade all installed packages
@@ -54,3 +56,54 @@ $ curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -  # download an
 $ sudo apt-get install -y nodejs # install Node
 $ node -v # confirm installation
 ```
+
+---
+
+## Server Setup
+```bash
+$ ssh host@ip             # SHH to raspberry
+$ hciconfig               # verify available Bluetooth
+
+$ sudo apt install bluetooth bluez libbluetooth-dev libudev-dev # install blutooth libraries
+
+$ sudo service bluetooth stop # or sudo systemctl stop/status/start bluetooth # to start, stop or check status of Bluetooth daemon.
+
+$ sudo hciconfig hci0 up     # activate Blutooth functionality
+
+$ mkdir server && cd server && npm init -y          # generate package.json in server
+directory
+$ npm install bleno --save     # install Bleno
+$ touch server.js # create an empty js file
+```
+- Add the following in `server.js`
+```javascript
+const bleno = require("bleno");
+
+const UUID = "69d9fdd724fa4987aa3f43b5f4cabcbf"; // set your own value
+const MINOR = 2; // set your own value
+const MAJOR = 1; // set your own value
+const TX_POWER = -60; // just declare transmit power in dBm
+
+console.log("Starting bleno...");
+
+bleno.on("stateChange", state => {
+
+    if (state === 'poweredOn') {
+        console.log("Starting broadcast...");
+
+        bleno.startAdvertisingIBeacon(UUID, MAJOR, MINOR, TX_POWER, err => {
+            if(err) {
+                console.error(err);
+            } else {
+                console.log(`Broadcasting as iBeacon uuid:${UUID}, major: ${MAJOR}, minor: ${MINOR}`);
+            }
+        });
+    } else {
+        console.log("Stopping broadcast...");
+        bleno.stopAdvertising();
+    }
+});
+```
+
+- run `sudo node app.js` to start the server.
+
