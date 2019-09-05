@@ -6,6 +6,8 @@
     - [Setup SSH](#setup-ssh)
     - [Setup Node and NPM](#setup-node-and-npm)
 - [Server Setup](#server-setup)
+  - [Basic Bluetooth CLI](#basic-bluetooth-cli)
+  - [Server Characteristics](#server-characteristics)
 
 ## Environment Setup
 
@@ -60,13 +62,12 @@ $ node -v # confirm installation
 ---
 
 ## Server Setup
+
 ```bash
 $ ssh host@ip             # SHH to raspberry
 $ hciconfig               # verify available Bluetooth
 
 $ sudo apt install bluetooth bluez libbluetooth-dev libudev-dev # install blutooth libraries
-
-$ sudo service bluetooth stop # or sudo systemctl stop/status/start bluetooth # to start, stop or check status of Bluetooth daemon.
 
 $ sudo hciconfig hci0 up     # activate Blutooth functionality
 
@@ -75,33 +76,44 @@ directory
 $ npm install bleno --save     # install Bleno
 $ touch server.js # create an empty js file
 ```
-- Add the following in `server.js`
-```javascript
-const bleno = require("bleno");
 
-const UUID = "69d9fdd724fa4987aa3f43b5f4cabcbf"; // set your own value
+#### Basic Bluetooth CLI
+- Run  `$ sudo systemctl stop/status/start bluetooth` # to start, stop or check status of Bluetooth daemon.
+- After you installed the bluetooth packages and run the Bluetooth daemon you can run `bluetoothctl` to start the Bluetooth CLI.
+- Use `[bluetooth]# help/quit/exit` to get help or exit the cli.
+- 
+
+#### Server Characteristics
+
+- Add the following in `server.js`
+
+```javascript
+const bleno = require('bleno');
+
+const UUID = '69d9fdd724fa4987aa3f43b5f4cabcbf'; // set your own value
 const MINOR = 2; // set your own value
 const MAJOR = 1; // set your own value
 const TX_POWER = -60; // just declare transmit power in dBm
 
-console.log("Starting bleno...");
+console.log('Starting bleno...');
 
-bleno.on("stateChange", state => {
+bleno.on('stateChange', state => {
+  if (state === 'poweredOn') {
+    console.log('Starting broadcast...');
 
-    if (state === 'poweredOn') {
-        console.log("Starting broadcast...");
-
-        bleno.startAdvertisingIBeacon(UUID, MAJOR, MINOR, TX_POWER, err => {
-            if(err) {
-                console.error(err);
-            } else {
-                console.log(`Broadcasting as iBeacon uuid:${UUID}, major: ${MAJOR}, minor: ${MINOR}`);
-            }
-        });
-    } else {
-        console.log("Stopping broadcast...");
-        bleno.stopAdvertising();
-    }
+    bleno.startAdvertisingIBeacon(UUID, MAJOR, MINOR, TX_POWER, err => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(
+          `Broadcasting as iBeacon uuid:${UUID}, major: ${MAJOR}, minor: ${MINOR}`
+        );
+      }
+    });
+  } else {
+    console.log('Stopping broadcast...');
+    bleno.stopAdvertising();
+  }
 });
 ```
 
