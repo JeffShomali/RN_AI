@@ -1,4 +1,6 @@
 # React Native Bluetooth Low Energy(BLE) Scanner
+> Unfortunately React Native and [Expo](https://expo.canny.io/feature-requests/p/bluetooth-api) do not have Bluetooth API. 
+Other people have the same issue [Stack-overflow](https://stackoverflow.com/questions/50603841/bluetooth-application-with-react-native)
 
 - [Environment Setup](#environment-setup)
   - [Setup Raspberry PI3](#setup-raspberry-pi3)
@@ -8,6 +10,8 @@
 - [Server Setup](#server-setup)
   - [Basic Bluetooth CLI](#basic-bluetooth-cli)
   - [Server Characteristics](#server-characteristics)
+
+- [Using Linux Bluetooth](#using-linux-bluetooth)
 
 ## Environment Setup
 
@@ -119,3 +123,21 @@ bleno.on('stateChange', state => {
 
 - run `sudo node app.js` to start the server.
 
+#### Using Linux Bluetooth
+
+To use the Linux Bluetooth CLI read [this](https://docs.ubuntu.com/core/en/stacks/bluetooth/bluez/docs/reference/available-commands) documentation
+
+
+
+---
+Packtpub:
+What we can build with Raspberry Pi3: Media Center(video streaming), Cloud Storage(Dropbox, ...), GPS Tracker, Web server, Gateway for Bluetooth Devices.
+
+- Technologies in the Internet of Things:
+  - Bluetooth (Apple Watch)
+  - Wireless Local Area Network (WLAN) such as ChromeCast or Apple TV.
+    - This technology is proven to be very effective and simple and can easily be implemented on a device with limited capabilities.
+  - Zigbee: is the only lite weighted low power consumption technology available in the market which supports mesh communication and is good for smart plug. Disadvantage is to need to have other controller to manage Zigbee device. 
+
+  - Bluetooth Low Energy: 
+     Bluetooth technology was invented to connect mobile devices to computers over a short distance. It was to only use for the limited range and with a limited amount of data. 
