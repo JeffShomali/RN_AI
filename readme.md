@@ -1,6 +1,10 @@
 # React Native Bluetooth Low Energy(BLE) Scanner
 > Unfortunately React Native and [Expo](https://expo.canny.io/feature-requests/p/bluetooth-api) do not have Bluetooth API. 
-Other people have the same issue [Stack-overflow](https://stackoverflow.com/questions/50603841/bluetooth-application-with-react-native)
+Other people have the same issue [Stack-overflow](https://stackoverflow.com/questions/50603841/bluetooth-application-with-react-native) or [This](#https://stackoverflow.com/questions/41349860/can-react-native-used-to-build-my-bluetooth-apps) or [this](https://thoughtbot.com/blog/cutting-our-blueteeth-on-react-native).
+[Make Raspberry Pi Device Become a Bluetooth Object Push Profile (OPP) Server](https://www.instructables.com/id/Make-Raspberry-Pi-device-become-a-Bluetooth-Object/)
+
+
+
 
 - [Environment Setup](#environment-setup)
   - [Setup Raspberry PI3](#setup-raspberry-pi3)
@@ -141,3 +145,25 @@ What we can build with Raspberry Pi3: Media Center(video streaming), Cloud Stora
 
   - Bluetooth Low Energy: 
      Bluetooth technology was invented to connect mobile devices to computers over a short distance. It was to only use for the limited range and with a limited amount of data. 
+
+     I modified the `/usr/lib/arm-linux-gnueabihf/libarmmem.so`
+     `$ btmon` monitor Bluetooth log
+
+```
+  sudo apt-get install blueman 
+  sudo apt-get install bluetooth 
+  sudo apt-get install pi-bluetooth 
+  sudo apt-get install pulseaudio-module-bluetooth 
+  sudo apt-get install bluez
+  sudo apt-get install bluez-firmware 
+  sudo apt-get install bluez-obexd 
+  sudo apt-get install bluez-utils
+```
+
+- `hciconfig -a`
+- `sudo bluetoothd -d -n` 
+
+```
+sudo !!
+sudo /snap/bin/bluez.obexctl
+```
