@@ -3,6 +3,7 @@
 Other people have the same issue [Stack-overflow](https://stackoverflow.com/questions/50603841/bluetooth-application-with-react-native) or [This](#https://stackoverflow.com/questions/41349860/can-react-native-used-to-build-my-bluetooth-apps) or [this](https://thoughtbot.com/blog/cutting-our-blueteeth-on-react-native).
 [Make Raspberry Pi Device Become a Bluetooth Object Push Profile (OPP) Server](https://www.instructables.com/id/Make-Raspberry-Pi-device-become-a-Bluetooth-Object/)
 
+[BlueZ Wiki](https://wiki.archlinux.org/index.php/bluetooth#hcitool_scan:_Device_not_found)
 
 
 
@@ -74,10 +75,28 @@ $ node -v # confirm installation
 ```bash
 $ ssh host@ip             # SHH to raspberry
 $ hciconfig               # verify available Bluetooth
+  
+# List of blutooth tools need to install to work on BLE on Linux
+sudo apt-get install blueman     # It is a full featured Bluetooth manager whcih is shown on GUI,.
+sudo apt-get install bluetooth   #This package provides all the plugins supported by BluezBluetooth stack.
+sudo apt-get install bluez       # This package provides the Bluetooth protocol stack and the bluetoothctl utility.
+sudo apt-get install bluez-firmware 
+sudo apt-get install bluez-obexd 
+sudo apt-get install bluez-utils
+sudo apt-get install pi-bluetooth 
+sudo apt-get install pulseaudio-module-bluetooth 
 
-$ sudo apt install bluetooth bluez libbluetooth-dev libudev-dev # install blutooth libraries
+$ sudo apt install bluetooth bluez blueman libbluetooth-dev libudev-dev # install blutooth libraries
 
+$ hciconfig  # get Raspberry Pi Bluetooth device information. 
 $ sudo hciconfig hci0 up     # activate Blutooth functionality
+$ sdptool add sp
+
+
+
+
+
+
 
 $ mkdir server && cd server && npm init -y          # generate package.json in server
 directory
@@ -150,20 +169,71 @@ What we can build with Raspberry Pi3: Media Center(video streaming), Cloud Stora
      `$ btmon` monitor Bluetooth log
 
 ```
-  sudo apt-get install blueman 
-  sudo apt-get install bluetooth 
+  sudo apt-get install blueman     # It is a full featured Bluetooth manager whcih is shown on GUI,.
+  sudo apt-get install bluetooth   #This package provides all the plugins supported by BluezBluetooth stack.
   sudo apt-get install pi-bluetooth 
   sudo apt-get install pulseaudio-module-bluetooth 
-  sudo apt-get install bluez
+  sudo apt-get install bluez       # This package provides the Bluetooth protocol stack and the bluetoothctl utility.
   sudo apt-get install bluez-firmware 
   sudo apt-get install bluez-obexd 
   sudo apt-get install bluez-utils
 ```
 
-- `hciconfig -a`
-- `sudo bluetoothd -d -n` 
 
+ 
+
+### Run the SNAP
 ```
+- hciconfig -a
+- sudo bluetoothd -d -n
+
 sudo !!
 sudo /snap/bin/bluez.obexctl
 ```
+
+### If not connected install this
+```sudo apt install pulseaudio-module-bluetooth 
+pulseaudio -k
+pulseaudio --start
+```
+
+### File share from PI to phone
+https://www.raspberrypi.org/forums/viewtopic.php?t=97294
+OR
+https://www.instructables.com/id/Make-Raspberry-Pi-device-become-a-Bluetooth-Object-1/
+
+TroubleShooting:
+
+```
+Error
+  SDP session setup failed, disabling bluetooth
+  net_init() failed
+
+Solution:
+$ sudo service bluetooth stop
+$ sudo bluetoothd --compat
+```
+
+## [Phone to PI Bluetooth Communication](https://www.electronicwings.com/raspberry-pi/using-raspberry-pi-3-on-board-bluetooth-for-communication)
+
+```
+$ bluetoothctl
+$ power on
+$ devices
+$ scan on
+$ agent on
+$ pair <mac address>
+$ trust <mac address>
+$ Connect <mac address>
+
+---
+$ hciconfig
+$ hciconfig hci0 up  # if error  “operation not possible due to RF-Kill” run the $ rfkill unblock all
+$ sdptool add sp
+
+
+# --- Listen for message 
+$ sudo rfcomm listen hci0&   # wait for device(smartphone) request to connect.
+# open Blueterm iOS/Android app on mobile and send message 
+$ cat /dev/rfcomm0           # to display message
+
